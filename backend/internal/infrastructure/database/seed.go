@@ -151,3 +151,73 @@ func SeedSongs(db *gorm.DB) error {
 
 	return nil
 }
+
+func SeedPlaylists(db *gorm.DB) error {
+	// Data playlists untuk di-seed
+	playlists := []domain.Playlist{
+		{
+			Name:        "Top Hits",
+			Slug:        "top-hits",
+			Description: StringPtr("The top hits of the year"),
+		},
+		{
+			Name:        "Chill Vibes",
+			Slug:        "chill-vibes",
+			Description: StringPtr("Relaxing music for a chill atmosphere"),
+		},
+		{
+			Name:        "Workout Playlist",
+			Slug:        "workout-playlist",
+			Description: StringPtr("Energetic tracks for workout sessions"),
+		},
+	}
+
+	// Insert data ke dalam database
+	for _, playlist := range playlists {
+		// Cek apakah data sudah ada berdasarkan slug
+		var existingPlaylist domain.Playlist
+		err := db.Where("slug = ?", playlist.Slug).First(&existingPlaylist).Error
+		if err == nil {
+			log.Printf("Playlist '%s' already exists, skipping...", playlist.Name)
+			continue
+		}
+
+		// Tambahkan jika belum ada
+		if err := db.Create(&playlist).Error; err != nil {
+			return err
+		}
+		log.Printf("Seeded playlist: %s", playlist.Name)
+
+		// Menambahkan beberapa lagu ke playlist ini (relasi Many-to-Many)
+		// Ambil playlist yang baru saja disimpan
+		var createdPlaylist domain.Playlist
+		err = db.Where("slug = ?", playlist.Slug).First(&createdPlaylist).Error
+		if err != nil {
+			return err
+		}
+
+		// Ambil beberapa lagu yang sudah ada dan tambahkan ke playlist
+		var songs []domain.Song
+		err = db.Limit(3).Find(&songs).Error // Ambil 3 lagu untuk playlist
+		if err != nil {
+			return err
+		}
+
+		// Menambahkan lagu-lagu ini ke playlist
+		for _, song := range songs {
+			// Tambahkan relasi many-to-many
+			err := db.Model(&createdPlaylist).Association("Songs").Append(&song)
+			if err != nil {
+				return err
+			}
+			log.Printf("Added song '%s' to playlist '%s'", song.Title, playlist.Name)
+		}
+	}
+
+	return nil
+}
+
+// Helper function untuk pointer string
+func StringPtr(s string) *string {
+	return &s
+}
