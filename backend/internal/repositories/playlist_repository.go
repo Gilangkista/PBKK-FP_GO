@@ -20,8 +20,6 @@ func (r *PlaylistRepository) FindBySlug(slug string) (*domain.Playlist, error) {
 	return &playlist, nil
 }
 
-// Fungsi lainnya di sini (FindAll, Create, etc.)
-
 func (r *PlaylistRepository) Create(playlist *domain.Playlist) error {
 	return r.DB.Create(playlist).Error
 }
