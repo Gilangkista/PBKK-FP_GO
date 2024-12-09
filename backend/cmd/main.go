@@ -86,7 +86,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error seeding songs: %v", err)
 	}
-	err = database.SeedPlaylists(db) // Menambahkan pemanggilan SeedPlaylists
+	err = database.SeedPlaylists(db)
 	if err != nil {
 		log.Fatalf("Error seeding playlists: %v", err)
 	}
