@@ -1,50 +1,48 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/router';
+
+type Song = {
+  Title: string;
+  Artist: { Name: string };
+  Category: { Name: string };
+};
 
 type PlaylistDetail = {
   ID: number;
   Name: string;
   Description?: string;
+  Songs: Song[];  // List of songs in the playlist
 };
 
-export default function PlaylistDetail() {
-  const [playlist, setPlaylist] = useState<PlaylistDetail | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-  const { slug } = router.query;  // Ambil slug dari URL
+export default async function PlaylistDetail({ params }: { params: { slug: string } }) {
+  const { slug } = params;
 
-  useEffect(() => {
-    if (slug) {
-      const fetchPlaylist = async () => {
-        try {
-          // Menggunakan endpoint yang benar sesuai slug
-          const response = await axios.get(`http://localhost:8080/playlists/${slug}`);
-          setPlaylist(response.data);
-        } catch (err) {
-          console.error('Error fetching playlist detail:', err);
-          setError('Failed to fetch playlist details');
-        }
-      };
+  try {
+    // Mengambil data playlist berdasarkan slug
+    const response = await axios.get(`http://localhost:8080/playlists/${slug}`);
+    const playlist: PlaylistDetail = response.data;
 
-      fetchPlaylist();
-    }
-  }, [slug]);  // Jalankan ulang jika slug berubah
+    return (
+      <main className="p-4">
+        <h1 className="text-2xl font-bold">{playlist.Name}</h1>
+        {playlist.Description && <p>{playlist.Description}</p>}
 
-  if (error) return <p className="text-red-500">{error}</p>;
-
-  return (
-    <main className="p-4">
-      {playlist ? (
-        <>
-          <h1 className="text-2xl font-bold">{playlist.Name}</h1>
-          {playlist.Description && <p>{playlist.Description}</p>}
-        </>
-      ) : (
-        <p>Loading playlist...</p>
-      )}
-    </main>
-  );
+        <h2 className="mt-4 text-lg">Songs in this Playlist:</h2>
+        <ul>
+          {playlist.Songs.map((song, index) => (
+            <li key={index}>
+              {song.Title} - {song.Artist.Name} ({song.Category.Name})
+            </li>
+          ))}
+        </ul>
+      </main>
+    );
+  } catch (error) {
+    console.error('Error fetching playlist details:', error);
+    return (
+      <main className="p-4">
+        <h1 className="text-2xl font-bold">Playlist Not Found</h1>
+        <p className="text-red-500">The playlist you are looking for does not exist.</p>
+      </main>
+    );
+  }
 }
