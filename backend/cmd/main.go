@@ -3,10 +3,10 @@ package main
 import (
 	"FP_GO_PBKK-D/internal/controller"
 	"FP_GO_PBKK-D/internal/infrastructure"
+	"FP_GO_PBKK-D/internal/infrastructure/database"
 	"FP_GO_PBKK-D/internal/repositories"
 	"FP_GO_PBKK-D/internal/routes"
 	"FP_GO_PBKK-D/internal/usecases"
-
 	"log"
 
 	"github.com/gin-contrib/cors"
@@ -50,14 +50,17 @@ func main() {
 	// Inisialisasi repositories
 	artistRepo := &repositories.ArtistRepository{DB: db}
 	songRepo := &repositories.SongRepository{DB: db}
+	playlistRepo := &repositories.PlaylistRepository{DB: db}
 
 	// Inisialisasi usecases
 	artistUsecase := &usecases.ArtistUsecase{Repo: artistRepo}
 	songUsecase := &usecases.SongUsecase{Repo: songRepo}
+	playlistUsecase := &usecases.PlaylistUsecase{Repo: playlistRepo}
 
 	// Inisialisasi controllers
 	artistController := &controller.ArtistController{Usecase: artistUsecase}
 	songController := &controller.SongController{Usecase: songUsecase}
+	playlistController := &controller.PlaylistController{Usecase: playlistUsecase}
 
 	// Setup Gin Router
 	router := gin.Default()
@@ -68,7 +71,25 @@ func main() {
 	// Register routes
 	routes.ArtistRoutes(router, artistController)
 	routes.SongRoutes(router, songController)
-	// Tambahkan routes lain di sini jika ada
+	routes.PlaylistRoutes(router, playlistController)
+
+	// Seed data
+	err = database.SeedArtists(db)
+	if err != nil {
+		log.Fatalf("Error seeding artists: %v", err)
+	}
+	err = database.SeedCategories(db)
+	if err != nil {
+		log.Fatalf("Error seeding categories: %v", err)
+	}
+	err = database.SeedSongs(db)
+	if err != nil {
+		log.Fatalf("Error seeding songs: %v", err)
+	}
+	err = database.SeedPlaylists(db) // Menambahkan pemanggilan SeedPlaylists
+	if err != nil {
+		log.Fatalf("Error seeding playlists: %v", err)
+	}
 
 	// Jalankan server
 	port := ":8080"
