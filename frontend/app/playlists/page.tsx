@@ -17,7 +17,7 @@ export default function Playlists() {
   useEffect(() => {
     const fetchPlaylists = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/playlists');  // Pastikan API endpoint ini benar
+        const response = await axios.get('http://localhost:8080/playlists/');  // Pastikan API endpoint ini benar
         console.log(response.data);
         setPlaylists(response.data || []);  // Pastikan data yang diterima adalah array
       } catch (err) {
