@@ -8,11 +8,11 @@ type Song = {
   Category: { Name: string };
 };
 
-export default async function SongDetails({ params }: { params: { id: number } }) {
-  const { id } = params;
+export default async function SongDetails({ params }: { params: { slug: string } }) {
+  const { slug } = params;
 
   try {
-    const response = await axios.get(`http://localhost:8080/songs/${id}`);
+    const response = await axios.get(`http://localhost:8080/songs/${slug}`);
     const song: Song = response.data;
 
     return (

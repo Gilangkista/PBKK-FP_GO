@@ -9,4 +9,5 @@ import (
 func SongRoutes(r *gin.Engine, ctrl *controller.SongController) {
 	songGroup := r.Group("/songs")
 	songGroup.GET("/", ctrl.GetSongs)
+	songGroup.GET("/:slug", ctrl.GetSongBySlug)
 }
