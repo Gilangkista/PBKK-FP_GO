@@ -36,10 +36,12 @@ func (r *PlaylistRepository) FindByID(id uint) (*domain.Playlist, error) {
 	return &playlist, err
 }
 
+// Update playlist
 func (r *PlaylistRepository) Update(playlist *domain.Playlist) error {
 	return r.DB.Save(playlist).Error
 }
 
+// Delete playlist
 func (r *PlaylistRepository) Delete(id uint) error {
 	return r.DB.Delete(&domain.Playlist{}, id).Error
 }
