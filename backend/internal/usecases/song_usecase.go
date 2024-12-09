@@ -9,17 +9,10 @@ type SongUsecase struct {
 	Repo *repositories.SongRepository
 }
 
-func (u *SongUsecase) CreateSong(title, slug string, artistID, categoryID uint) (*domain.Song, error) {
-	song := &domain.Song{
-		Title:      title,
-		Slug:       slug,
-		ArtistID:   artistID,
-		CategoryID: categoryID,
-	}
-	err := u.Repo.Create(song)
-	return song, err
-}
-
 func (u *SongUsecase) GetAllSongs() ([]domain.Song, error) {
 	return u.Repo.FindAll()
+}
+
+func (u *SongUsecase) GetSongBySlug(slug string) (*domain.Song, error) {
+	return u.Repo.FindBySlug(slug)
 }
