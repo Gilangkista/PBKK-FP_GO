@@ -8,7 +8,6 @@ import (
 )
 
 func SeedArtists(db *gorm.DB) error {
-	// Data artists untuk di-seed
 	artists := []domain.Artist{
 		{
 			Name: "Bernadya",
@@ -32,9 +31,7 @@ func SeedArtists(db *gorm.DB) error {
 		},
 	}
 
-	// Insert data ke dalam database
 	for _, artist := range artists {
-		// Cek apakah data sudah ada berdasarkan nama
 		var existingArtist domain.Artist
 		err := db.Where("name = ?", artist.Name).First(&existingArtist).Error
 		if err == nil {
@@ -42,7 +39,6 @@ func SeedArtists(db *gorm.DB) error {
 			continue
 		}
 
-		// Tambahkan jika belum ada
 		if err := db.Create(&artist).Error; err != nil {
 			return err
 		}
@@ -53,7 +49,6 @@ func SeedArtists(db *gorm.DB) error {
 }
 
 func SeedCategories(db *gorm.DB) error {
-	// Data categories untuk di-seed
 	categories := []domain.Category{
 		{
 			Name: "Pop",
@@ -72,14 +67,12 @@ func SeedCategories(db *gorm.DB) error {
 			Slug: "classic",
 		},
 		{
-			Name: "Hip-hop",
-			Slug: "hip-hop",
+			Name: "Indie",
+			Slug: "indie",
 		},
 	}
 
-	// Insert data ke dalam database
 	for _, category := range categories {
-		// Cek apakah data sudah ada berdasarkan nama
 		var existingCategory domain.Category
 		err := db.Where("name = ?", category.Name).First(&existingCategory).Error
 		if err == nil {
@@ -87,7 +80,6 @@ func SeedCategories(db *gorm.DB) error {
 			continue
 		}
 
-		// Tambahkan jika belum ada
 		if err := db.Create(&category).Error; err != nil {
 			return err
 		}
@@ -98,43 +90,70 @@ func SeedCategories(db *gorm.DB) error {
 }
 
 func SeedSongs(db *gorm.DB) error {
-	// Data songs untuk di-seed
 	songs := []domain.Song{
 		{
-			Title:      "Someone Like You",
-			Slug:       "someone-like-you",
+			Title:      "Satu Bulan",
+			Slug:       "satu-bulan",
 			ArtistID:   1,
 			CategoryID: 1,
 		},
 		{
-			Title:      "Bad Habits",
-			Slug:       "bad-habits",
+			Title:      "Untungnya, Hidup Harus Tetap Berjalan",
+			Slug:       "untungnya,-hidup-harus-tetap-berjalan",
+			ArtistID:   1,
+			CategoryID: 1,
+		},
+		{
+			Title:      "Someone Like You",
+			Slug:       "someone-like-you",
 			ArtistID:   2,
+			CategoryID: 1,
+		},
+		{
+			Title:      "All I Ask",
+			Slug:       "all-i-ask",
+			ArtistID:   2,
+			CategoryID: 1,
+		},
+		{
+			Title:      "Chasing Pavements",
+			Slug:       "chasing-pavements",
+			ArtistID:   2,
+			CategoryID: 1,
+		},
+		{
+			Title:      "Backburner",
+			Slug:       "backburner",
+			ArtistID:   3,
+			CategoryID: 5,
+		},
+		{
+			Title:      "lowkey",
+			Slug:       "lowkey",
+			ArtistID:   3,
+			CategoryID: 5,
+		},
+		{
+			Title:      "505",
+			Slug:       "505",
+			ArtistID:   5,
 			CategoryID: 2,
 		},
 		{
-			Title:      "High School Musical",
-			Slug:       "high-school-musical",
-			ArtistID:   3,
-			CategoryID: 3,
+			Title:      "Do I Wanna Know?",
+			Slug:       "do-i-wanna-know?",
+			ArtistID:   5,
+			CategoryID: 2,
 		},
 		{
-			Title:      "Take Me To Church",
-			Slug:       "take-me-to-church",
+			Title:      "Lebih Indah",
+			Slug:       "lebih-indah",
 			ArtistID:   4,
-			CategoryID: 4,
-		},
-		{
-			Title:      "Billionaire",
-			Slug:       "billionaire",
-			ArtistID:   5, // Ganti dengan ID artist yang sesuai
-			CategoryID: 5,
+			CategoryID: 1,
 		},
 	}
 
-	// Insert data ke dalam database
 	for _, song := range songs {
-		// Cek apakah data sudah ada berdasarkan slug
 		var existingSong domain.Song
 		err := db.Where("slug = ?", song.Slug).First(&existingSong).Error
 		if err == nil {
@@ -142,7 +161,6 @@ func SeedSongs(db *gorm.DB) error {
 			continue
 		}
 
-		// Tambahkan jika belum ada
 		if err := db.Create(&song).Error; err != nil {
 			return err
 		}
@@ -153,7 +171,6 @@ func SeedSongs(db *gorm.DB) error {
 }
 
 func SeedPlaylists(db *gorm.DB) error {
-	// Data playlists untuk di-seed
 	playlists := []domain.Playlist{
 		{
 			Name:        "Top Hits",
@@ -172,9 +189,7 @@ func SeedPlaylists(db *gorm.DB) error {
 		},
 	}
 
-	// Insert data ke dalam database
 	for _, playlist := range playlists {
-		// Cek apakah data sudah ada berdasarkan slug
 		var existingPlaylist domain.Playlist
 		err := db.Where("slug = ?", playlist.Slug).First(&existingPlaylist).Error
 		if err == nil {
@@ -182,30 +197,24 @@ func SeedPlaylists(db *gorm.DB) error {
 			continue
 		}
 
-		// Tambahkan jika belum ada
 		if err := db.Create(&playlist).Error; err != nil {
 			return err
 		}
 		log.Printf("Seeded playlist: %s", playlist.Name)
 
-		// Menambahkan beberapa lagu ke playlist ini (relasi Many-to-Many)
-		// Ambil playlist yang baru saja disimpan
 		var createdPlaylist domain.Playlist
 		err = db.Where("slug = ?", playlist.Slug).First(&createdPlaylist).Error
 		if err != nil {
 			return err
 		}
 
-		// Ambil beberapa lagu yang sudah ada dan tambahkan ke playlist
 		var songs []domain.Song
-		err = db.Limit(3).Find(&songs).Error // Ambil 3 lagu untuk playlist
+		err = db.Limit(3).Find(&songs).Error
 		if err != nil {
 			return err
 		}
 
-		// Menambahkan lagu-lagu ini ke playlist
 		for _, song := range songs {
-			// Tambahkan relasi many-to-many
 			err := db.Model(&createdPlaylist).Association("Songs").Append(&song)
 			if err != nil {
 				return err
@@ -217,7 +226,6 @@ func SeedPlaylists(db *gorm.DB) error {
 	return nil
 }
 
-// Helper function untuk pointer string
 func StringPtr(s string) *string {
 	return &s
 }

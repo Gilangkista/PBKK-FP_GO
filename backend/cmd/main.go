@@ -66,7 +66,7 @@ func main() {
 	router := gin.Default()
 
 	// Menambahkan middleware CORS untuk mengizinkan permintaan dari frontend
-	router.Use(cors.Default()) // Default CORS policy
+	router.Use(cors.Default())
 
 	// Register routes
 	routes.ArtistRoutes(router, artistController)
