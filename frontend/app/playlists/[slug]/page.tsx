@@ -36,20 +36,17 @@ export default function PlaylistDetail() {
     }
   }, [params]);
 
-  // Ambil data playlist dan daftar lagu yang bisa dipilih
   useEffect(() => {
     const fetchPlaylistAndSongs = async () => {
       if (!slug) return;
 
       try {
-        // Ambil data playlist
         const playlistResponse = await axios.get(`http://localhost:8080/playlists/detail/${slug}`);
         setPlaylist(playlistResponse.data);
         setDescription(playlistResponse.data.Description || '');
         
-        // Ambil daftar semua lagu
         const songsResponse = await axios.get('http://localhost:8080/songs/');
-        setSongs(songsResponse.data); // Semua lagu yang tersedia
+        setSongs(songsResponse.data);
 
       } catch (err) {
         console.error('Error fetching playlist details:', err);
@@ -60,15 +57,12 @@ export default function PlaylistDetail() {
     fetchPlaylistAndSongs();
   }, [slug]);
 
-  // Fungsi untuk mendapatkan lagu yang belum ada di playlist
   const getAvailableSongs = () => {
-    if (!playlist) return []; // Jika playlist belum ada, return array kosong
+    if (!playlist) return [];
     
-    // Filter lagu yang belum ada di playlist
     return songs.filter(song => !playlist.Songs.some(playlistSong => playlistSong.Slug === song.Slug));
   };
 
-  // Fungsi untuk memperbarui deskripsi playlist
   const handleUpdateDescription = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!slug || !playlist) return;
@@ -87,25 +81,20 @@ export default function PlaylistDetail() {
     }
   };
 
-  // Fungsi untuk menambahkan lagu ke playlist
   const handleAddSong = async () => {
     if (!slug || !selectedSongSlug) return;
 
     try {
-        // Mengirim data songSlug ke backend
         const response = await axios.post(`http://localhost:8080/playlists/detail/${slug}/songs`, null, {
             params: { songSlug: selectedSongSlug },
         });
 
-        // Menampilkan response dari backend (jika perlu debugging)
         console.log('Add song response:', response.data);
 
-        // Menambahkan lagu baru ke playlist yang ada di state
         setSuccess('Song added successfully!');
         setError(null);
-        setSelectedSongSlug(null); // Reset pilihan lagu
+        setSelectedSongSlug(null);
 
-        // Memperbarui data playlist
         const updatedPlaylistResponse = await axios.get(`http://localhost:8080/playlists/detail/${slug}`);
         setPlaylist(updatedPlaylistResponse.data);
 
@@ -114,33 +103,26 @@ export default function PlaylistDetail() {
         setError('Failed to add song.');
         setSuccess(null);
     }
-};
+  };
 
-  // Fungsi untuk menghapus lagu dari playlist
   const handleRemoveSong = async (songSlug: string) => {
     if (!slug) return;
   
     try {
-      // Mengirim request DELETE untuk menghapus lagu dari playlist
-      const response = await axios.delete(`http://localhost:8080/playlists/detail/${slug}/songs`, { data: { songSlug } });
-  
-      // Menampilkan response dari backend (jika perlu debugging)
+      const response = await axios.delete(`http://localhost:8080/playlists/detail/${slug}/songs/${songSlug}`);
       console.log('Remove song response:', response.data);
-  
-      // Menambahkan pesan sukses
+
       setSuccess('Song removed successfully!');
       setError(null);
-  
-      // Memperbarui data playlist setelah menghapus lagu
+      
       const updatedPlaylistResponse = await axios.get(`http://localhost:8080/playlists/detail/${slug}`);
       setPlaylist(updatedPlaylistResponse.data);
-  
     } catch (err) {
       console.error('Error removing song:', err);
       setError('Failed to remove song.');
       setSuccess(null);
     }
-  };  
+  };
 
   if (!playlist) {
     return (

@@ -20,7 +20,7 @@ export default function Songs() {
     const fetchSongs = async () => {
       try {
         const response = await axios.get('http://localhost:8080/songs/');
-        setSongs(response.data || []); // Ensure it's an array
+        setSongs(response.data || []);
       } catch (err) {
         console.error('Error fetching songs:', err);
         setError('Failed to fetch songs');

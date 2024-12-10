@@ -23,7 +23,7 @@ func (c *SongController) GetSongs(ctx *gin.Context) {
 
 func (c *SongController) GetSongBySlug(ctx *gin.Context) {
 	slug := ctx.Param("slug")
-	log.Printf("Received slug: %s", slug) // Tambahkan log
+	log.Printf("Received slug: %s", slug)
 	song, err := c.Usecase.GetSongBySlug(slug)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "Song not found"})

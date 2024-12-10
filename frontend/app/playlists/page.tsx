@@ -1,9 +1,9 @@
-'use client'; // Tambahkan 'use client' di sini untuk menandakan ini adalah Client Component
+'use client';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
-import { useRouter } from 'next/navigation'; // Gunakan useRouter dari 'next/navigation'
+import { useRouter } from 'next/navigation';
 
 type Playlist = {
   ID: number;
@@ -16,13 +16,13 @@ export default function Playlists() {
   const [newPlaylistName, setNewPlaylistName] = useState<string>('');
   const [newPlaylistDescription, setNewPlaylistDescription] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter(); // Pastikan useRouter hanya dipanggil di Client Component
+  const router = useRouter();
 
   useEffect(() => {
     const fetchPlaylists = async () => {
       try {
         const response = await axios.get('http://localhost:8080/playlists/');
-        setPlaylists(response.data || []); // Pastikan data yang diterima adalah array
+        setPlaylists(response.data || []);
       } catch (err) {
         console.error('Error fetching playlists:', err);
         setError('Failed to fetch playlists');
@@ -37,7 +37,7 @@ export default function Playlists() {
     try {
       const newPlaylist = { Name: newPlaylistName, Description: newPlaylistDescription };
       const response = await axios.post('http://localhost:8080/playlists/', newPlaylist);
-      setPlaylists([...playlists, response.data]); // Menambah playlist baru ke state
+      setPlaylists([...playlists, response.data]);
       setNewPlaylistName('');
       setNewPlaylistDescription('');
     } catch (err) {
@@ -49,7 +49,7 @@ export default function Playlists() {
   const handleDeletePlaylist = async (id: number) => {
     try {
       await axios.delete(`http://localhost:8080/playlists/${id}`);
-      setPlaylists(playlists.filter(playlist => playlist.ID !== id)); // Menghapus playlist dari state
+      setPlaylists(playlists.filter(playlist => playlist.ID !== id));
     } catch (err) {
       console.error('Error deleting playlist:', err);
       setError('Failed to delete playlist');

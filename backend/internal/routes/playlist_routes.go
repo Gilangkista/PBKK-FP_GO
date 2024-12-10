@@ -7,14 +7,12 @@ import (
 )
 
 func PlaylistRoutes(r *gin.Engine, ctrl *controller.PlaylistController) {
-	// Grup untuk rute berdasarkan slug
 	playlistGroupBySlug := r.Group("/playlists/detail")
 	playlistGroupBySlug.GET("/:slug", ctrl.GetPlaylistBySlug)
 	playlistGroupBySlug.PUT("/:slug", ctrl.UpdatePlaylistBySlug)
 	playlistGroupBySlug.POST("/:slug/songs", ctrl.AddSongToPlaylist)
-	playlistGroupBySlug.DELETE("/:slug/songs", ctrl.RemoveSongFromPlaylist)
+	playlistGroupBySlug.DELETE("/:slug/songs/:songSlug", ctrl.RemoveSongFromPlaylist)
 
-	// Grup untuk rute berdasarkan id
 	playlistGroupById := r.Group("/playlists")
 	playlistGroupById.GET("/", ctrl.GetPlaylists)
 	playlistGroupById.POST("/", ctrl.CreatePlaylist)

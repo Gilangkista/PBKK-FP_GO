@@ -13,7 +13,7 @@ type Song = {
 };
 
 export default function SongDetails() {
-  const params = useParams(); // Menggunakan useParams untuk mendapatkan params
+  const params = useParams();
   const [song, setSong] = useState<Song | null>(null);
   const [error, setError] = useState<string | null>(null);
 

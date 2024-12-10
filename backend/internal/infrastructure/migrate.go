@@ -11,7 +11,6 @@ import (
 func MigrateDB(db *gorm.DB) {
 	log.Println("Starting database migration...")
 
-	// Call migration functions
 	migrations.MigrateArtist(db) // For artist
 	database.SeedArtists(db)
 	migrations.MigrateCategory(db) // For category
