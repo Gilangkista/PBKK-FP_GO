@@ -24,11 +24,6 @@ func (uc *PlaylistUsecase) GetAllPlaylists() ([]domain.Playlist, error) {
 	return uc.Repo.FindAll()
 }
 
-// Fungsi untuk mengambil playlist berdasarkan ID
-func (uc *PlaylistUsecase) GetPlaylistByID(id uint) (*domain.Playlist, error) {
-	return uc.Repo.FindByID(id)
-}
-
 // Fungsi untuk memperbarui playlist
 func (uc *PlaylistUsecase) UpdatePlaylist(playlist *domain.Playlist) error {
 	return uc.Repo.Update(playlist)
@@ -37,4 +32,14 @@ func (uc *PlaylistUsecase) UpdatePlaylist(playlist *domain.Playlist) error {
 // Fungsi untuk menghapus playlist
 func (uc *PlaylistUsecase) DeletePlaylist(id uint) error {
 	return uc.Repo.Delete(id)
+}
+
+// Fungsi untuk menambahkan lagu ke playlist
+func (uc *PlaylistUsecase) AddSongToPlaylist(playlistSlug string, songSlug string) error {
+	return uc.Repo.AddSongToPlaylist(playlistSlug, songSlug)
+}
+
+// Fungsi untuk menghapus lagu dari playlist
+func (uc *PlaylistUsecase) RemoveSongFromPlaylist(playlistSlug string, songSlug string) error {
+	return uc.Repo.RemoveSongFromPlaylist(playlistSlug, songSlug)
 }
