@@ -29,24 +29,26 @@ export default function Artists() {
   }, []);
 
   return (
-    <main className="p-4">
-      <h1 className="text-2xl font-bold mb-4">All Artists</h1>
+    <main className="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-3xl">
+        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">All Artists</h1>
 
-      {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-      <ul className="space-y-2">
         {artists && artists.length > 0 ? (
-          artists.map((artist) => (
-            <li key={artist.ID} className="border-b py-2">
-              <Link href={`/artists/${artist.Slug}`} className="text-blue-500">
-                {artist.Name}
-              </Link>
-            </li>
-          ))
+          <ul className="divide-y divide-gray-200">
+            {artists.map((artist) => (
+              <li key={artist.ID} className="py-4 hover:bg-gray-50">
+                <Link href={`/artists/${artist.Slug}`} className="text-lg font-medium text-blue-600 hover:underline">
+                  {artist.Name}
+                </Link>
+              </li>
+            ))}
+          </ul>
         ) : (
-          <li>No artists available</li>
+          <p className="text-center text-gray-500">No artists available</p>
         )}
-      </ul>
+      </div>
     </main>
   );
 }

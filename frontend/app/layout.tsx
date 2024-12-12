@@ -26,15 +26,15 @@ export default function RootLayout({
     <html lang="en" className="h-full bg-gray-100">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}>
         {/* Navbar */}
-        <div className="min-h-full">
-          <nav className="bg-gray-800">
+        <div className="min-h-full bg-white">
+          <nav className="bg-green-800">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="flex h-16 items-center justify-between">
                 <div className="flex items-center">
                   <div className="shrink-0">
                     <img
                       className="h-8 w-8"
-                      src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
+                      src="/logo.png"
                       alt="Your Company"
                     />
                   </div>

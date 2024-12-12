@@ -126,78 +126,89 @@ export default function PlaylistDetail() {
 
   if (!playlist) {
     return (
-      <main className="p-4">
-        <h1 className="text-2xl font-bold">Loading...</h1>
-        {error && <p className="text-red-500">{error}</p>}
+      <main className="bg-gray-100 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold">Loading...</h1>
+          {error && <p className="text-red-500 mt-2">{error}</p>}
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="p-4">
-      <h1 className="text-2xl font-bold mb-2">{playlist.Name}</h1>
-      {success && <p className="text-green-500 mb-2">{success}</p>}
-      {error && <p className="text-red-500 mb-2">{error}</p>}
+    <main className="bg-gray-100 min-h-screen flex flex-col items-center p-6">
+      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl">
+        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">{playlist.Name}</h1>
+        {success && <p className="text-green-500 text-center mb-4">{success}</p>}
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-      <form onSubmit={handleUpdateDescription} className="mb-4">
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Update playlist description"
-          className="border p-2 w-full mb-2"
-        />
-        <button type="submit" className="bg-blue-500 text-white p-2">
-          Update Description
-        </button>
-      </form>
+        <form onSubmit={handleUpdateDescription} className="mb-6 bg-gray-50 p-4 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Update Description</h2>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Update playlist description"
+            className="border border-gray-300 rounded p-2 w-full mb-2 focus:outline-none focus:ring-2 focus:ring-blue-400 text-black"
+          />
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+          >
+            Update Description
+          </button>
+        </form>
 
-      {/* Menambahkan lagu baru */}
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold">Add Song to Playlist</h2>
-        <select
-          value={selectedSongSlug || ''}
-          onChange={(e) => setSelectedSongSlug(e.target.value)}
-          className="border p-2 mb-2 w-full"
-        >
-          <option value="">Select a Song</option>
-          {getAvailableSongs().length > 0 ? (
-            getAvailableSongs().map((song) => (
-              <option key={song.Slug} value={song.Slug}>
-                {song.Title} - {song.Artist.Name}
-              </option>
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Add Song to Playlist</h2>
+          <select
+            value={selectedSongSlug || ''}
+            onChange={(e) => setSelectedSongSlug(e.target.value)}
+            className="border border-gray-300 rounded p-2 w-full mb-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-black"
+          >
+            <option value="">Select a Song</option>
+            {getAvailableSongs().length > 0 ? (
+              getAvailableSongs().map((song) => (
+                <option key={song.Slug} value={song.Slug}>
+                  {song.Title} - {song.Artist.Name}
+                </option>
+              ))
+            ) : (
+              <option>No songs available</option>
+            )}
+          </select>
+          <button
+            type="button"
+            onClick={handleAddSong}
+            className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
+          >
+            Add Song
+          </button>
+        </div>
+
+        <h2 className="text-xl font-semibold mt-6 mb-4 text-gray-700">Songs in this Playlist:</h2>
+        <ul className="divide-y divide-gray-200">
+          {playlist.Songs.length > 0 ? (
+            playlist.Songs.map((song) => (
+              <li
+                key={song.Slug}
+                className="py-4 flex justify-between items-center hover:bg-gray-50 rounded-md transition duration-200"
+              >
+                <div className='text-black'>
+                  {song.Title}
+                </div>
+                <button
+                  onClick={() => handleRemoveSong(song.Slug)}
+                  className="text-red-500 hover:text-red-700 transition"
+                >
+                  Remove
+                </button>
+              </li>
             ))
           ) : (
-            <option>No songs available</option>
+            <p className="text-center text-gray-500">No songs available in this playlist.</p>
           )}
-        </select>
-        <button
-          type="button"
-          onClick={handleAddSong}
-          className="bg-green-500 text-white p-2"
-        >
-          Add Song
-        </button>
+        </ul>
       </div>
-
-      {/* Menampilkan daftar lagu di playlist */}
-      <h2 className="text-lg font-semibold mt-4">Songs in this Playlist:</h2>
-      <ul className="space-y-1">
-        {playlist.Songs.length > 0 ? (
-          playlist.Songs.map((song) => (
-            <li key={song.Slug}>
-              {song.Title} - {song.Artist.Name} ({song.Category.Name})
-              <button
-                onClick={() => handleRemoveSong(song.Slug)}
-                className="ml-2 text-red-500"
-              >
-                Remove
-              </button>
-            </li>
-          ))
-        ) : (
-          <li>No songs available in this playlist.</li>
-        )}
-      </ul>
     </main>
   );
 }
