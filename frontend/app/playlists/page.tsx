@@ -57,48 +57,62 @@ export default function Playlists() {
   };
 
   return (
-    <main className="p-4">
-      <h1 className="text-2xl font-bold mb-4">All Playlists</h1>
+    <main className="bg-gray-100 min-h-screen flex flex-col items-center p-6">
+      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl">
+        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">All Playlists</h1>
 
-      {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-      <form onSubmit={handleCreatePlaylist} className="mb-4">
-        <input
-          type="text"
-          value={newPlaylistName}
-          onChange={(e) => setNewPlaylistName(e.target.value)}
-          placeholder="Playlist Name"
-          className="border p-2 w-full mb-2"
-          required
-        />
-        <textarea
-          value={newPlaylistDescription}
-          onChange={(e) => setNewPlaylistDescription(e.target.value)}
-          placeholder="Description"
-          className="border p-2 w-full mb-2"
-        />
-        <button type="submit" className="bg-blue-500 text-white p-2">Create Playlist</button>
-      </form>
+        <form onSubmit={handleCreatePlaylist} className="mb-6 bg-gray-50 p-4 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Create New Playlist</h2>
+          <input
+            type="text"
+            value={newPlaylistName}
+            onChange={(e) => setNewPlaylistName(e.target.value)}
+            placeholder="Playlist Name"
+            className="border border-gray-300 rounded p-2 w-full mb-2 focus:outline-none focus:ring-2 focus:ring-blue-400 text-black"
+            required
+          />
+          <textarea
+            value={newPlaylistDescription}
+            onChange={(e) => setNewPlaylistDescription(e.target.value)}
+            placeholder="Description"
+            className="border border-gray-300 rounded p-2 w-full mb-2 focus:outline-none focus:ring-2 focus:ring-blue-400 text-black"
+          />
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+          >
+            Create Playlist
+          </button>
+        </form>
 
-      <ul className="space-y-2">
-        {playlists.length > 0 ? (
-          playlists.map((playlist) => (
-            <li key={playlist.ID} className="border-b py-2 flex justify-between">
-              <Link href={`/playlists/${playlist.Slug}`} className="text-blue-500">
-                {playlist.Name}
-              </Link>
-              <button
-                onClick={() => handleDeletePlaylist(playlist.ID)}
-                className="text-red-500"
+        <ul className="divide-y divide-gray-200">
+          {playlists.length > 0 ? (
+            playlists.map((playlist) => (
+              <li
+                key={playlist.ID}
+                className="py-4 flex justify-between items-center hover:bg-gray-50 rounded-md transition duration-200"
               >
-                Delete
-              </button>
-            </li>
-          ))
-        ) : (
-          <li>No playlists available</li>
-        )}
-      </ul>
+                <Link
+                  href={`/playlists/${playlist.Slug}`}
+                  className="text-lg font-medium text-blue-600 hover:underline"
+                >
+                  {playlist.Name}
+                </Link>
+                <button
+                  onClick={() => handleDeletePlaylist(playlist.ID)}
+                  className="text-red-500 hover:text-red-700 transition"
+                >
+                  Delete
+                </button>
+              </li>
+            ))
+          ) : (
+            <p className="text-center text-gray-500">No playlists available</p>
+          )}
+        </ul>
+      </div>
     </main>
   );
 }

@@ -31,24 +31,33 @@ export default function Songs() {
   }, []);
 
   return (
-    <main className="p-4">
-      <h1 className="text-2xl font-bold mb-4">All Songs</h1>
+    <main className="bg-gray-100 min-h-screen flex items-center justify-center">
+      <div className="container max-w-4xl mx-auto p-4">
+        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">All Songs</h1>
 
-      {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-      <ul className="space-y-2">
-        {songs && songs.length > 0 ? (
-          songs.map((song) => (
-            <li key={song.ID} className="border-b py-2">
-              <Link href={`/songs/${song.Slug}`} className="text-blue-500">
-                {song.Title} - {song.Artist.Name} ({song.Category.Name})
-              </Link>
-            </li>
-          ))
-        ) : (
-          <li>No songs available</li>
-        )}
-      </ul>
+        <div className="bg-white shadow-md rounded-lg p-6">
+          {songs && songs.length > 0 ? (
+            <ul className="divide-y divide-gray-200">
+              {songs.map((song) => (
+                <li key={song.ID} className="py-4 flex items-center justify-between hover:bg-gray-50">
+                  <div>
+                    <Link href={`/songs/${song.Slug}`} className="text-lg font-medium text-blue-600 hover:underline">
+                      {song.Title}
+                    </Link>
+                    <p className="text-sm text-gray-500">
+                      {song.Artist.Name} - {song.Category.Name}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-center text-gray-500">No songs available</p>
+          )}
+        </div>
+      </div>
     </main>
   );
 }
